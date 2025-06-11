@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Results for {{ city }}</title>
+</head>
+<body>
+  <h1>Events in {{ city }}</h1>
+
+  {% if error %}
+    <p style="color:red;">Error: {{ error }}</p>
+  {% endif %}
+
+  {% if events %}
+    <ul>
+    {% for event in events %}
+      <li>{{ event }}</li>
+    {% endfor %}
+    </ul>
+  {% else %}
+    <p>No events found.</p>
+  {% endif %}
+
+  <a href="{{ url_for('index') }}">Back to search</a>
+</body>
+</html>

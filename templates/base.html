@@ -1,21 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Event Finder</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 2em;
-            background-color: #f6f8fa;
-        }
-        h1 {
-            color: #333;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}Forecasted{% endblock %}</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #1e1e1e;
+      font-family: "Roboto Thin", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    .logo {
+      position: sticky;
+      text-align: center;
+      margin-bottom: 70px;
+    }
+
+    .text {
+      font-size: 48px;
+      font-weight: bold;
+      background: linear-gradient(to right, maroon, red, orange, yellow, green, turquoise, blue, violet, deeppink);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .text.mirror {
+      transform: scaleY(-1);
+      position: absolute;
+      top: 45px;
+      left: 0;
+      width: 100%;
+    }
+
+    input[type="text"] {
+      padding: 15px 20px;
+      font-size: 20px;
+      border-radius: 25px;
+      border: none;
+      width: 400px;
+      max-width: 90%;
+    }
+    form{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+    .search-button {
+      padding: 15px 30px;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      background: gray;
+      color: white;
+      transition: transform 0.2s ease;
+        width: 150px;
+    }
+
+    .search-button:hover {
+      transform: scale(1.05);
+    }
+  </style>
 </head>
 <body>
+  <div class="logo">
+    <div class="text">forecasted</div>
+    <div class="text mirror">forecasted</div>
+  </div>
 
-
+  {% block content %}{% endblock %}
 </body>
 </html>

@@ -1,14 +1,17 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Event Weather Finder</title>
-</head>
-<body>
-    <h1>Find Events Based on Weather</h1>
-    <form method="POST">
-        <label for="city">Enter a city:</label>
-        <input type="text" name="city" id="city" required>
-        <button type="submit">Search</button>
-    </form>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Home - Forecasted{% endblock %}
+
+{% block content %}
+  <form method="POST">
+    <input type="text" name="city_name" placeholder="Enter a city name:" required />
+    <button type="submit" class="search-button">Search</button>
+  </form>
+
+  {% if result %}
+    <p style="color:white; margin-top: 30px;">{{ result }}</p>
+  {% endif %}
+{% endblock %}
+
+
+
