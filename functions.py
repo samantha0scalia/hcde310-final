@@ -50,7 +50,7 @@ def get_coordinates_from_city(city_name):
     return lat, lon
 
 def get_weather_for_event(date_str, lat, lon):
-    url = (f"{OPEN_METEO_BASE_URL}?latitude={lat}&longitude={lon}&daily=weathercode,temperature_2m_max,temperature_2m_min"
+    url = (f"{OPEN_METEO_URL}?latitude={lat}&longitude={lon}&daily=weathercode,temperature_2m_max,temperature_2m_min"
            f"&temperature_unit=fahrenheit&timezone=auto&start_date={date_str}&end_date={date_str}")
     response = requests.get(url)
     if response.status_code != 200:
@@ -68,8 +68,8 @@ def get_weather_for_event(date_str, lat, lon):
 
 
 def search_events_by_city(city, start_date, end_date):
-    url = (f"https://app.ticketmaster.com/discovery/v2/events.json?apikey={TICKETMASTER_API_KEY}"
-           f"&city={city}&startDateTime={start_date}&endDateTime={end_date}&size=20")
+    url = (f"https://app.ticketmaster.com/discovery/v2/events.json?apikey={TICKET_MASTER_API_KEY}"
+           f"&city={city}&startDateTime={start_date}&endDateTime={end_date}&size=30")
     response = requests.get(url)
     if response.status_code != 200:
         return None
@@ -81,7 +81,7 @@ def classify_event(event):
     segment = classifications[0]["segment"]["name"].lower() if classifications else ""
 
     keywords_indoor = ["theater", "ballet", "opera", "symphony", "indoor", "orchestra", "broadway"]
-    keywords_outdoor = ["festival", "fair", "outdoor", "parade", "market", "race", "marathon"]
+    keywords_outdoor = ["festival", "fair", "outdoor", "parade", "market", "race", "marathon", "stadium" , ""]
 
     if any(word in name for word in keywords_indoor) or "classical" in segment:
         return "indoor"
@@ -101,7 +101,6 @@ def process_events_for_next_3_days(city):
     for offset in range(3):
         target_date = today + timedelta(days=offset)
         date_str = target_date.strftime("%Y-%m-%d")
-
         forecast = get_weather_for_event(date_str, lat, lon)
         if not forecast:
             continue
@@ -114,29 +113,21 @@ def process_events_for_next_3_days(city):
 
         start_iso = target_date.strftime("%Y-%m-%dT00:00:00Z")
         end_iso = target_date.strftime("%Y-%m-%dT23:59:59Z")
-
         events_data = search_events_by_city(city, start_iso, end_iso)
-        if not events_data or "_embedded" not in events_data:
-            continue
 
         day_results = []
 
-        for event in events_data["_embedded"]["events"]:
-            name = event.get("name", "No name")
-            url = event.get("url", "#")
-            venue = event.get("_embedded", {}).get("venues", [{}])[0].get("name", "No venue")
+        if events_data and "_embedded" in events_data:
+            for event in events_data["_embedded"]["events"]:
+                name = event.get("name", "No name")
+                url = event.get("url", "#")
+                venue = event.get("_embedded", {}).get("venues", [{}])[0].get("name", "No venue")
+                event_type = classify_event(event)
 
-            event_type = classify_event(event)
-
-            if (is_bad_weather and event_type == "indoor") or (not is_bad_weather and event_type == "outdoor"):
-                day_results.append({
-                    "name": name,
-                    "venue": venue,
-                    "url": url
-                })
-
-            if len(day_results) >= 5:
-                break
+                if (is_bad_weather and event_type == "indoor") or (not is_bad_weather and event_type == "outdoor"):
+                    day_results.append({"name": name, "venue": venue, "url": url})
+                if len(day_results) >= 5:
+                    break
 
         all_results.append({
             "date": target_date.strftime("%A, %B %-d, %Y"),
@@ -145,3 +136,4 @@ def process_events_for_next_3_days(city):
         })
 
     return all_results, None
+

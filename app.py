@@ -4,20 +4,13 @@ from functions import process_events_for_next_3_days
 app = Flask(__name__)
 
 @app.route("/", methods=["GET", "POST"])
-def home():
+def index():
+    events = []
+    error = None
     if request.method == "POST":
-        city = request.form.get("city")
-        if not city:
-            return render_template("base.html", error="Please enter a city.")
-
-        results, error = process_events_for_next_3_days(city)
-
-        if error:
-            return render_template("base.html", error=error)
-
-        return render_template("results.html", city=city, results=results)
-
-    return render_template("base.html")
+        city = request.form["city"]
+        events, error = process_events_for_next_3_days(city)
+    return render_template("index.html", events=events, error=error)
 
 if __name__ == "__main__":
     app.run(debug=True)
