@@ -1,17 +1,90 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Event Explorer</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/747/747310.png" type="image/png">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+            color: white;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-{% block title %}Home - Forecasted{% endblock %}
+        .container {
+            background-color: rgba(151, 143, 143, 0.16);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 3px 5px rgba(255, 255, 255, 0.33);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
 
-{% block content %}
-  <form method="POST">
-    <input type="text" name="city_name" placeholder="Enter a city name:" required />
-    <button type="submit" class="search-button">Search</button>
-  </form>
+        h1 {
+            font-size: 2.3em;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, red, orange, yellow, green, dodgerblue, purple, blueviolet);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-  {% if result %}
-    <p style="color:white; margin-top: 30px;">{{ result }}</p>
-  {% endif %}
-{% endblock %}
+        p {
+            font-size: 1.1em;
+            margin-bottom: 25px;
+        }
 
+        form input[type="text"] {
+            padding: 12px;
+            border-radius: 6px;
+            border: none;
+            width: 80%;
+            font-size: 1em;
+            margin-bottom: 15px;
+        }
 
+        button {
+            padding: 12px 24px;
+            font-size: 1em;
+            background-color: #e37ead;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: lightpink;
+        }
+
+        .examples {
+            margin-top: 20px;
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Find the Best Events Around You</h1>
+        <p>Explore top events based on your city's weather forecast for the next 3 days.</p>
+        <form method="POST" action="/">
+            <input type="text" name="city_name" placeholder="Enter your city" required>
+            <br>
+            <button type="submit">Search Events</button>
+        </form>
+        <div class="examples">
+            Try: <em>Seattle, Los Angeles, New York</em>
+        </div>
+    </div>
+</body>
+</html>
 

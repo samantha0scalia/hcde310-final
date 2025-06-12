@@ -80,8 +80,8 @@ def classify_event(event):
     classifications = event.get("classifications", [])
     segment = classifications[0]["segment"]["name"].lower() if classifications else ""
 
-    keywords_indoor = ["theater", "ballet", "opera", "symphony", "indoor", "orchestra", "broadway"]
-    keywords_outdoor = ["festival", "fair", "outdoor", "parade", "market", "race", "marathon", "stadium" , "ballpark"]
+    keywords_indoor = ["theater", "ballet", "opera", "symphony", "indoor", "orchestra", "broadway" , "room" , "house" , "cafe"]
+    keywords_outdoor = ["festival", "fair", "outdoor", "parade", "market", "field" , "race", "marathon", "stadium" , "ballpark", "zoo" , "park" , "beach"]
 
     if any(word in name for word in keywords_indoor) or "classical" in segment:
         return "indoor"
@@ -118,16 +118,25 @@ def process_events_for_next_3_days(city):
         day_results = []
 
         if events_data and "_embedded" in events_data:
+            fallback_results = []
             for event in events_data["_embedded"]["events"]:
                 name = event.get("name", "No name")
                 url = event.get("url", "#")
                 venue = event.get("_embedded", {}).get("venues", [{}])[0].get("name", "No venue")
                 event_type = classify_event(event)
 
+                event_info = {"name": name, "venue": venue, "url": url}
+
                 if (is_bad_weather and event_type == "indoor") or (not is_bad_weather and event_type == "outdoor"):
-                    day_results.append({"name": name, "venue": venue, "url": url})
+                    day_results.append(event_info)
+
+                fallback_results.append(event_info)
+
                 if len(day_results) >= 5:
                     break
+
+            if not day_results:
+                day_results = fallback_results[:5]
 
         all_results.append({
             "date": target_date.strftime("%A, %B %-d, %Y"),
