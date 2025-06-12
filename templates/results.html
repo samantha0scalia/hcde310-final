@@ -1,26 +1,63 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <title>Results for {{ city }}</title>
+    <title>Event Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background-color: #1e1e1e;
+        }
+        h1 {
+            color: #333;
+        }
+        .day-section {
+            background: slategrey;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .weather {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .event {
+            margin: 10px 0;
+        }
+        .event a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        .event a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-  <h1>Events in {{ city }}</h1>
+    <h1>Events for {{ request.args.get('city_name', 'your city') }}</h1>
 
-  {% if error %}
-    <p style="color:red;">Error: {{ error }}</p>
-  {% endif %}
+    {% if result %}
+        {% for day in result %}
+            <div class="day-section">
+                <h2>{{ day.date }}</h2>
+                <p class="weather">{{ day.weather }}</p>
 
-  {% if events %}
-    <ul>
-    {% for event in events %}
-      <li>{{ event }}</li>
-    {% endfor %}
-    </ul>
-  {% else %}
-    <p>No events found.</p>
-  {% endif %}
-
-  <a href="{{ url_for('index') }}">Back to search</a>
+                {% if day.events %}
+                    <ul>
+                        {% for event in day.events %}
+                            <li class="event">
+                                <a href="{{ event.url }}" target="_blank">{{ event.name }}</a> – {{ event.venue }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No matching events found for this day.</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No results to display.</p>
+    {% endif %}
 </body>
 </html>

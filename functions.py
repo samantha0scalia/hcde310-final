@@ -81,7 +81,7 @@ def classify_event(event):
     segment = classifications[0]["segment"]["name"].lower() if classifications else ""
 
     keywords_indoor = ["theater", "ballet", "opera", "symphony", "indoor", "orchestra", "broadway"]
-    keywords_outdoor = ["festival", "fair", "outdoor", "parade", "market", "race", "marathon", "stadium" , ""]
+    keywords_outdoor = ["festival", "fair", "outdoor", "parade", "market", "race", "marathon", "stadium" , "ballpark"]
 
     if any(word in name for word in keywords_indoor) or "classical" in segment:
         return "indoor"
@@ -93,7 +93,7 @@ def classify_event(event):
 def process_events_for_next_3_days(city):
     lat, lon = get_coordinates_from_city(city)
     if lat is None or lon is None:
-        return None, "Could not find coordinates for city."
+        return [], "Could not find coordinates for city."
 
     today = datetime.now()
     all_results = []

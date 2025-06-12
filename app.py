@@ -16,10 +16,11 @@ def results():
     city = request.args.get("city_name", None)
     if city:
         events, error = process_events_for_next_3_days(city)
-        result = f"Results for city: {city}"
     else:
-        result = "No city specified."
-    return render_template("results.html", result=result)
+        events, error = [], "No city specified."
+
+    return render_template("results.html", result=events, error=error)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
