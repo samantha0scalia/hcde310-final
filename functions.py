@@ -1,7 +1,7 @@
 import requests
 from datetime import datetime, timedelta
 
-TICKET_MASTER_API_KEY = "rn0c8lpspqcfdqyvDRKxr7lCm7R7lx4C"
+TICKET_MASTER_API_KEY = 
 OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast"
 
 def get_weather_description(code):
